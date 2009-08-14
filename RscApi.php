@@ -32,10 +32,13 @@ class RscApi {
 	private $lastResponseStatus;
 
 	/**
-	 * Creates a new Rackspace Cloud API object
+	 * Creates a new Rackspace Cloud API object to make calls with
 	 *
 	 * Your API key needs to be generated using the Rackspace Cloud Management
 	 * Console. You can do this under Cloud Files (not Cloud Servers).
+	 *
+	 * Authentication is done automatically when making the first API call
+	 * using this object.
 	 *
 	 * @param string $user The username of the account to use
 	 * @param string $key The API key to use
@@ -96,11 +99,15 @@ class RscApi {
 	/**
 	 * Gets the API call limits for this account
 	 *
+	 * There are two types of limits enforced by Rackspace Cloud - rate limits
+	 * and absolute limits.
+	 *
 	 * @return array Absolute and rate limits
 	 */
 	public function limits() {
 		$response = $this->makeApiCall("/limits");
-		if (isset($response['limits'])) {
+		if (in_array($this->getLastResponseStatus(), array(200, 203))
+				&& isset($response['limits'])) {
 			return $response['limits'];
 		}
 
@@ -274,7 +281,51 @@ class RscApi {
 	}
 
 	/**
+	 * Translates the HTTP response status from the last API call to a human
+	 * friendly message
+	 *
+	 * @return string The response message from the last call
+	 */
+	public function getLastResponseMessage() {
+		$map = array(
+			"200" => "Successful informational response",
+			"202" => "Successful action response",
+			"203" => "Successful informational response from the cache",
+			"204" => "Authentication successful",
+			"400" => "Bad request (check the validity of input values)",
+			"401" => "Unauthorized (check username and API key)",
+			"403" => "Resize not allowed",
+			"404" => "Item not found",
+			"409" => "Build, backup or resize in process",
+			"413" => "Over API limit (check limits())",
+			"415" => "Bad media type",
+			"500" => "Cloud server issue",
+			"503" => "API service in unavailable, or capacity is not available",
+		);
+
+		$status = $this->getLastResponseStatus();
+		if ($status) {
+			return $map[$status];
+		}
+
+		return NULL;
+	}
+
+	/**
 	 * Gets the HTTP response status from the last API call
+	 *
+	 * - 200 - successful informational response
+	 * - 202 - successful action response
+	 * - 203 - successful informational response from the cache
+	 * - 400 - bad request (possibly because the input values were invalid)
+	 * - 401 - unauthorized (check username and API key)
+	 * - 403 - resize not allowed
+	 * - 404 - item not found
+	 * - 409 - build, backup or resize in process
+	 * - 413 - over API limit (check limits())
+	 * - 415 - bad media type
+	 * - 500 - cloud server issue
+	 * - 503 - API service in unavailable, or capacity is not available
 	 *
 	 * @return integer The 3 digit HTTP response status, or NULL if the call had
 	 * 		issues
@@ -295,9 +346,11 @@ class RscApi {
 		// Authenticate if necessary
 		if (!$this->isAuthenticated()) {
 			if (!$this->authenticate()) {
-				die("ERROR: Could not authenticate");
+				return NULL;
 			}
 		}
+
+		$this->lastResponseStatus = NULL;
 
 		$jsonUrl = $this->serverUrl . $url . ".json";
 		$httpHeaders = array(
@@ -321,6 +374,7 @@ class RscApi {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
 		$jsonResponse = curl_exec($ch);
+		var_dump($jsonResponse);
 		curl_close($ch);
 
 		return json_decode($jsonResponse, TRUE);
@@ -375,8 +429,8 @@ class RscApi {
 
 		preg_match("/^HTTP\/1\.[01] (\d{3}) (.*)/", $response, $matches);
 		if (isset($matches[1])) {
-			$responseStatus = $matches[1];
-			if ($responseStatus == "204") {
+			$this->lastResponseStatus = $matches[1];
+			if ($this->lastResponseStatus == "204") {
 				preg_match("/X-Server-Management-Url: (.*)/", $response,
 						$matches);
 				$this->serverUrl = trim($matches[1]);

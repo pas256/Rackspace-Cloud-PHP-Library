@@ -15,8 +15,11 @@ $rsc = new RscApi(API_USER, API_KEY);
 
 // Check how we are going with the API limits that are enforced
 $apiLimits = $rsc->limits();
-var_dump($apiLimits);
 
+// Display response
+var_dump($apiLimits);
+var_dump($rsc->getLastResponseStatus());
+var_dump($rsc->getLastResponseMessage());
 
 
 ?>
