@@ -1,0 +1,19 @@
+ Rackspace Cloud PHP Library
+-----------------------------
+
+The Rackspace Cloud has released an API for their Cloud Servers which you can
+find here:
+  http://www.rackspacecloud.com/cloud_hosting_products/servers/api
+The Cloud Server API is currently in beta, and does not have any libraries
+available to simplify making calls, so I have created this PHP one.
+
+This is strictly for PHP5 since PHP4 should be forgotten forever.
+
+The API has some poorly written documentation, but it is still useful. You can
+find it at this address:
+  http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf
+
+This library is documented using PHPDoc.
+
+I welcome any other developers to join this project.
+
