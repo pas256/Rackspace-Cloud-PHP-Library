@@ -448,7 +448,6 @@ class RscApi {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
 		$jsonResponse = curl_exec($ch);
-		var_dump($jsonResponse);
 		curl_close($ch);
 
 		return json_decode($jsonResponse, TRUE);
