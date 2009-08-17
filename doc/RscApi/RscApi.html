@@ -65,7 +65,7 @@ Source Location: /RscApi.php<br /><br />
 		<table width="100%" border="0">
 		<tr><td valign="top" width="60%" class="class-overview">
 
-        		<p align="center" class="short-description"><strong>Rackspace Cloud API PHP Library
+        		<p align="center" class="short-description"><strong>Rackspace Cloud Server API PHP Library
 </strong></p>
 <span class="description"><p>The Rackspace Cloud has released an API for their Cloud Servers which you can  find below</p><p>The Cloud Server API is currently in beta, and does not have any libraries  available to simplify making calls, so I have created this PHP one.</p><p>This is strictly for PHP5 since PHP4 should be forgotten forever.</p><p>The API has some poorly written documentation, but it is still useful (link  below).</p></span>
 		<p class="notes">
@@ -94,13 +94,16 @@ Source Location: /RscApi.php<br /><br />
 		<ul>
 		  		  <li><a href="../RscApi/RscApi.html#method__construct">__construct</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodflavorList">flavorList</a></li>
+		  		  <li><a href="../RscApi/RscApi.html#methodgetLastResponseMessage">getLastResponseMessage</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodgetLastResponseStatus">getLastResponseStatus</a></li>
+		  		  <li><a href="../RscApi/RscApi.html#methodimageCreate">imageCreate</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodimageList">imageList</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodlimits">limits</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverAddressShare">serverAddressShare</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverCreate">serverCreate</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverDetails">serverDetails</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverList">serverList</a></li>
+		  		  <li><a href="../RscApi/RscApi.html#methodserverReboot">serverReboot</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodsharedIpGroupCreate">sharedIpGroupCreate</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodsharedIpGroupDetails">sharedIpGroupDetails</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodsharedIpGroupList">sharedIpGroupList</a></li>
@@ -126,10 +129,10 @@ Source Location: /RscApi.php<br /><br />
 		<div class="info-box-body">
 			<div class="method-summary">
 				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
-																																																																																																																<div class="method-definition">
+																																																																																																																																								<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">RscApi</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#__construct" title="details" class="method-name">__construct</a>()&nbsp;&nbsp;</td>
-					<td class="method-definition">Creates a new Rackspace Cloud API object</td></tr>
+					<td class="method-definition">Creates a new Rackspace Cloud Servers API object to make calls with</td></tr>
 				</div>
 																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
@@ -137,9 +140,19 @@ Source Location: /RscApi.php<br /><br />
 					<td class="method-definition">Get a list of flavors (available hardware configurations)</td></tr>
 				</div>
 																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">string</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getLastResponseMessage" title="details" class="method-name">getLastResponseMessage</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Translates the HTTP response status from the last API call to a human  friendly message</td></tr>
+				</div>
+																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">integer</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#getLastResponseStatus" title="details" class="method-name">getLastResponseStatus</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Gets the HTTP response status from the last API call</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#imageCreate" title="details" class="method-name">imageCreate</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Creates an image of the given server</td></tr>
 				</div>
 																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
@@ -170,6 +183,11 @@ Source Location: /RscApi.php<br /><br />
 											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#serverList" title="details" class="method-name">serverList</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Get a list of servers associated with this account</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#serverReboot" title="details" class="method-name">serverReboot</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Reboot a server</td></tr>
 				</div>
 																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
@@ -207,7 +225,7 @@ Source Location: /RscApi.php<br /><br />
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 43]</span>
+	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 46]</span>
 </div>
 <br />
 
@@ -222,9 +240,9 @@ $key&nbsp;
     </td></tr></table>
     </td></tr></table><br /></div>
 
-	<p align="center" class="short-description"><strong>Creates a new Rackspace Cloud API object
+	<p align="center" class="short-description"><strong>Creates a new Rackspace Cloud Servers API object to make calls with
 </strong></p>
-<span class="description"><p>Your API key needs to be generated using the Rackspace Cloud Management  Console. You can do this under Cloud Files (not Cloud Servers).</p></span>
+<span class="description"><p>Your API key needs to be generated using the Rackspace Cloud Management  Console. You can do this under Cloud Files (not Cloud Servers).</p><p>Authentication is done automatically when making the first API call  using this object.</p></span>
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
@@ -259,7 +277,7 @@ $key&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">flavorList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 62]</span>
+	<span class="method-title">flavorList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 65]</span>
 </div>
 <br />
 
@@ -303,11 +321,47 @@ $detailed = FALSE]&nbsp;
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
-<a name="methodgetLastResponseStatus" id="getLastResponseStatus"><!-- --></a>
+<a name="methodgetLastResponseMessage" id="getLastResponseMessage"><!-- --></a>
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">getLastResponseStatus</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 282]</span>
+	<span class="method-title">getLastResponseMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 363]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>string getLastResponseMessage(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Translates the HTTP response status from the last API call to a human  friendly message
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>The response message from the last call</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodgetLastResponseStatus" id="getLastResponseStatus"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">getLastResponseStatus</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 407]</span>
 </div>
 <br />
 
@@ -321,7 +375,7 @@ $detailed = FALSE]&nbsp;
 
 	<p align="center" class="short-description"><strong>Gets the HTTP response status from the last API call
 </strong></p>
-
+<span class="description"><p><ul><li>200 - successful informational response</li><li>202 - successful action response</li><li>203 - successful informational response from the cache</li><li>400 - bad request (possibly because the input values were invalid)</li><li>401 - unauthorized (check username and API key)</li><li>403 - resize not allowed</li><li>404 - item not found</li><li>409 - build, backup or resize in process</li><li>413 - over API limit (check limits())</li><li>415 - bad media type</li><li>500 - cloud server issue</li><li>503 - API service in unavailable, or capacity is not available</li></ul></p></span>
 	<br />
 	<strong>API Tags:</strong><br />
 <table border="0" cellspacing="0" cellpadding="0">
@@ -339,11 +393,66 @@ $detailed = FALSE]&nbsp;
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
+<a name="methodimageCreate" id="imageCreate"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">imageCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 89]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array imageCreate(
+integer
+$serverId, string
+$name&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Creates an image of the given server
+</strong></p>
+<span class="description"><p>You can use this method to create custom images. Once your image has  been created, you can build new servers with it.</p></span>
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$serverId:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The ID of the server to build the image from</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$name:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The name of the image to create</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>Details of the new images (most importantly, it's ID)</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodimageList" id="imageList"><!-- --></a>
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">imageList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 82]</span>
+	<span class="method-title">imageList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 118]</span>
 </div>
 <br />
 
@@ -359,7 +468,7 @@ $detailed = FALSE]&nbsp;
 
 	<p align="center" class="short-description"><strong>Get a list of images
 </strong></p>
-
+<span class="description"><p>An image is a collection of files you can use to create or rebuild a  server with. There are pre-build ones provided, but you can also create  your own.</p></span>
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
@@ -391,7 +500,7 @@ $detailed = FALSE]&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">limits</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 101]</span>
+	<span class="method-title">limits</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 140]</span>
 </div>
 <br />
 
@@ -405,7 +514,7 @@ $detailed = FALSE]&nbsp;
 
 	<p align="center" class="short-description"><strong>Gets the API call limits for this account
 </strong></p>
-
+<span class="description"><p>There are two types of limits enforced by Rackspace Cloud - rate limits  and absolute limits.</p></span>
 	<br />
 	<strong>API Tags:</strong><br />
 <table border="0" cellspacing="0" cellpadding="0">
@@ -427,7 +536,7 @@ $detailed = FALSE]&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverAddressShare</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 121]</span>
+	<span class="method-title">serverAddressShare</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 161]</span>
 </div>
 <br />
 
@@ -496,7 +605,7 @@ $configure = FALSE]&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">serverCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 150]</span>
+	<span class="method-title">serverCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 198]</span>
 </div>
 <br />
 
@@ -515,7 +624,7 @@ $sharedIpGroupId = NULL]&nbsp;
 
 	<p align="center" class="short-description"><strong>Creates a new server
 </strong></p>
-
+<span class="description"><p>Keep in mind that servers are created asynchronously. This means that  after this call, your server will be built over time. You can use the  server ID returned from this call to make subsequent calls to get the  build progress status.</p><p>Note that there is currently no support for server metadata.</p></span>
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
@@ -541,7 +650,7 @@ $sharedIpGroupId = NULL]&nbsp;
 				<td>
 				<span class="var-name">$sharedIpGroupId:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> (Optional) The ID of the shared IP group to put          the new server into</span>			</td></tr>
+				<span class="var-description"> (Optional) The ID of the shared IP group          to put the new server into (this is the only way you can add a          server into a shared IP group)</span>			</td></tr>
 				</table>
 
 	<br />
@@ -565,7 +674,7 @@ $sharedIpGroupId = NULL]&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 180]</span>
+	<span class="method-title">serverDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 228]</span>
 </div>
 <br />
 
@@ -613,7 +722,7 @@ $serverId&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">serverList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 197]</span>
+	<span class="method-title">serverList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 245]</span>
 </div>
 <br />
 
@@ -657,11 +766,66 @@ $detailed = FALSE]&nbsp;
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
-<a name="methodsharedIpGroupCreate" id="sharedIpGroupCreate"><!-- --></a>
+<a name="methodserverReboot" id="serverReboot"><!-- --></a>
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 218]</span>
+	<span class="method-title">serverReboot</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 271]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean serverReboot(
+integer
+$serverId, [boolean
+$hardReboot = FALSE]&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Reboot a server
+</strong></p>
+<span class="description"><p>The default is to do a SOFT reboot, meaning a graceful shutdown and  reboot of the system. You can also do a HARD reboot, which is the  equivalent of taking the power cord out and putting it back in.</p></span>
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$serverId:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The ID of the server to reboot</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">boolean</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$hardReboot:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> (Optional) Set to TRUE to perform a hard          reboot</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>TRUE if the reboot is underway</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodsharedIpGroupCreate" id="sharedIpGroupCreate"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">sharedIpGroupCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 299]</span>
 </div>
 <br />
 
@@ -713,10 +877,10 @@ $serverId = NULL]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsharedIpGroupDetails" id="sharedIpGroupDetails"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 244]</span>
+	<span class="method-title">sharedIpGroupDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 325]</span>
 </div>
 <br />
 
@@ -761,10 +925,10 @@ $sharedIpGroupId&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsharedIpGroupList" id="sharedIpGroupList"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 262]</span>
+	<span class="method-title">sharedIpGroupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 343]</span>
 </div>
 <br />
 
@@ -814,7 +978,7 @@ $detailed = FALSE]&nbsp;
 
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Thu, 13 Aug 2009 22:11:59 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
+		    Documentation generated on Mon, 17 Aug 2009 15:28:42 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
 	      </div>
       </td></tr></table>
     </td>

@@ -1,12 +1,12 @@
 <?php
 /**
- * Rackspace Cloud API PHP Library
+ * Rackspace Cloud Server API PHP Library
  *
  * @package RscApi
  */
 
 /**
- * Rackspace Cloud API PHP Library
+ * Rackspace Cloud Server API PHP Library
  *
  * The Rackspace Cloud has released an API for their Cloud Servers which you can
  * find below
@@ -32,7 +32,7 @@ class RscApi {
 	private $lastResponseStatus;
 
 	/**
-	 * Creates a new Rackspace Cloud API object to make calls with
+	 * Creates a new Rackspace Cloud Servers API object to make calls with
 	 *
 	 * Your API key needs to be generated using the Rackspace Cloud Management
 	 * Console. You can do this under Cloud Files (not Cloud Servers).
@@ -77,7 +77,40 @@ class RscApi {
 	}
 
 	/**
+	 * Creates an image of the given server
+	 *
+	 * You can use this method to create custom images. Once your image has
+	 * been created, you can build new servers with it.
+	 *
+	 * @param integer $serverId The ID of the server to build the image from
+	 * @param string $name The name of the image to create
+	 * @return array Details of the new images (most importantly, it's ID)
+	 */
+	public function imageCreate($serverId, $name) {
+		$url = "/images";
+
+		$data = array(
+			"image" => array(
+				"serverId" => $serverId,
+				"name" => $name,
+			),
+		);
+		$jsonData = json_encode($data);
+
+		$response = $this->makeApiCall($url, $jsonData);
+		if (isset($response['image'])) {
+			return $response['image'];
+		}
+
+		return NULL;
+	}
+
+	/**
 	 * Get a list of images
+	 *
+	 * An image is a collection of files you can use to create or rebuild a
+	 * server with. There are pre-build ones provided, but you can also create
+	 * your own.
 	 *
 	 * @param boolean $detailed If TRUE, get detailed image information
 	 * @return array Image details
@@ -147,11 +180,19 @@ class RscApi {
 	/**
 	 * Creates a new server
 	 *
+	 * Keep in mind that servers are created asynchronously. This means that
+	 * after this call, your server will be built over time. You can use the
+	 * server ID returned from this call to make subsequent calls to get the
+	 * build progress status.
+	 *
+	 * Note that there is currently no support for server metadata.
+	 *
 	 * @param string $name The friendly name of the server
 	 * @param integer $imageId The ID of the image to use
 	 * @param integer $flavorId The ID of the hardware config (flavor)
-	 * @param integer $sharedIpGroupId (Optional) The ID of the shared IP group to put
-	 * 		the new server into
+	 * @param integer $sharedIpGroupId (Optional) The ID of the shared IP group
+	 * 		to put the new server into (this is the only way you can add a
+	 * 		server into a shared IP group)
 	 * @return array New server details including the generated root password
 	 */
 	public function serverCreate($name, $imageId, $flavorId,
@@ -213,6 +254,39 @@ class RscApi {
 		}
 
 		return NULL;
+	}
+
+	/**
+	 * Reboot a server
+	 *
+	 * The default is to do a SOFT reboot, meaning a graceful shutdown and
+	 * reboot of the system. You can also do a HARD reboot, which is the
+	 * equivalent of taking the power cord out and putting it back in.
+	 *
+	 * @param integer $serverId The ID of the server to reboot
+	 * @param boolean $hardReboot (Optional) Set to TRUE to perform a hard
+	 * 		reboot
+	 * @return boolean TRUE if the reboot is underway
+	 */
+	public function serverReboot($serverId, $hardReboot = FALSE) {
+		$url = "/servers/$serverId/action";
+
+		$data = array(
+			"reboot" => array(),
+		);
+		if ($hardReboot) {
+			$data['reboot']['type'] = "HARD";
+		} else {
+			$data['reboot']['type'] = "SOFT";
+		}
+		$jsonData = json_encode($data);
+
+		$this->makeApiCall($url, $jsonData);
+		if ($this->getLastResponseStatus() == "202") {
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	/**
