@@ -220,6 +220,26 @@ class RscApi {
 	}
 
 	/**
+	 * Delete a server, destroying all data on it
+	 *
+	 * Make sure you want to do this before calling this method. Server deletes
+	 * also destroy all images created by that server (strange as it may seem).
+	 *
+	 * @param integer $serverId The ID of the server to delete
+	 * @return boolean TRUE if the server has been deleted
+	 */
+	public function serverDelete($serverId) {
+		$url = "/servers/$serverId";
+
+		$this->makeApiCall($url, NULL, "delete");
+		if ($this->getLastResponseStatus() == "202") {
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
 	 * Gets the details of a specific server
 	 *
 	 * @param integer $serverId The ID of the server to get the details for

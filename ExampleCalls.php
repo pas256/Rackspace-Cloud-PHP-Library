@@ -33,7 +33,7 @@ var_dump($myServers);
 
 
 // List available hardware configurations (flavors) and images
-$flavors = $rsc->flavorList();
+$flavors = $rsc->flavorList(TRUE);
 $images = $rsc->imageList();
 var_dump($flavors);
 var_dump($images);
