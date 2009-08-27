@@ -97,10 +97,14 @@ Source Location: /RscApi.php<br /><br />
 		  		  <li><a href="../RscApi/RscApi.html#methodgetLastResponseMessage">getLastResponseMessage</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodgetLastResponseStatus">getLastResponseStatus</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodimageCreate">imageCreate</a></li>
+		  		  <li><a href="../RscApi/RscApi.html#methodimageDetails">imageDetails</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodimageList">imageList</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodlimits">limits</a></li>
+		  		  <li><a href="../RscApi/RscApi.html#methodserverAddressList">serverAddressList</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverAddressShare">serverAddressShare</a></li>
+		  		  <li><a href="../RscApi/RscApi.html#methodserverBackupList">serverBackupList</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverCreate">serverCreate</a></li>
+		  		  <li><a href="../RscApi/RscApi.html#methodserverDelete">serverDelete</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverDetails">serverDetails</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverList">serverList</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverReboot">serverReboot</a></li>
@@ -129,7 +133,7 @@ Source Location: /RscApi.php<br /><br />
 		<div class="info-box-body">
 			<div class="method-summary">
 				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
-																																																																																																																																								<div class="method-definition">
+																																																																																																																																																																								<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">RscApi</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#__construct" title="details" class="method-name">__construct</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Creates a new Rackspace Cloud Servers API object to make calls with</td></tr>
@@ -156,6 +160,11 @@ Source Location: /RscApi.php<br /><br />
 				</div>
 																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#imageDetails" title="details" class="method-name">imageDetails</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets the details of a specific image</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#imageList" title="details" class="method-name">imageList</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Get a list of images</td></tr>
 				</div>
@@ -165,14 +174,29 @@ Source Location: /RscApi.php<br /><br />
 					<td class="method-definition">Gets the API call limits for this account</td></tr>
 				</div>
 																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#serverAddressList" title="details" class="method-name">serverAddressList</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Gets a list of all of the IP addresses (public and private) for the  specified server</td></tr>
+				</div>
+																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#serverAddressShare" title="details" class="method-name">serverAddressShare</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Share an IP Address with another server</td></tr>
 				</div>
 																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#serverBackupList" title="details" class="method-name">serverBackupList</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">List the backup schedule for a specific server</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#serverCreate" title="details" class="method-name">serverCreate</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Creates a new server</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#serverDelete" title="details" class="method-name">serverDelete</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Delete a server, destroying all data on it</td></tr>
 				</div>
 																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
@@ -325,7 +349,7 @@ $detailed = FALSE]&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">getLastResponseMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 363]</span>
+	<span class="method-title">getLastResponseMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 442]</span>
 </div>
 <br />
 
@@ -361,7 +385,7 @@ $detailed = FALSE]&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">getLastResponseStatus</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 407]</span>
+	<span class="method-title">getLastResponseStatus</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 486]</span>
 </div>
 <br />
 
@@ -405,9 +429,9 @@ $detailed = FALSE]&nbsp;
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
 		<code>array imageCreate(
-integer
-$serverId, string
-$name&nbsp;
+string
+$name, integer
+$serverId&nbsp;
 )</code>
     </td></tr></table>
     </td></tr></table><br /></div>
@@ -418,17 +442,17 @@ $name&nbsp;
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
-				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
-				<td>
-				<span class="var-name">$serverId:&nbsp;</span></td>
-				<td>
-				<span class="var-description"> The ID of the server to build the image from</span>			</td></tr>
-					<tr><td class="indent">
 				<span class="var-type">string</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$name:&nbsp;</span></td>
 				<td>
 				<span class="var-description"> The name of the image to create</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$serverId:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The ID of the server to build the image from</span>			</td></tr>
 				</table>
 
 	<br />
@@ -448,11 +472,59 @@ $name&nbsp;
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
-<a name="methodimageList" id="imageList"><!-- --></a>
+<a name="methodimageDetails" id="imageDetails"><!-- --></a>
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">imageList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 118]</span>
+	<span class="method-title">imageDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 114]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array imageDetails(
+integer
+$imageId&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Gets the details of a specific image
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$imageId:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The ID of the image to get the details for</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>Image details</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodimageList" id="imageList"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">imageList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 137]</span>
 </div>
 <br />
 
@@ -497,10 +569,10 @@ $detailed = FALSE]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodlimits" id="limits"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">limits</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 140]</span>
+	<span class="method-title">limits</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 159]</span>
 </div>
 <br />
 
@@ -532,11 +604,59 @@ $detailed = FALSE]&nbsp;
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
+<a name="methodserverAddressList" id="serverAddressList"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">serverAddressList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 176]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array serverAddressList(
+integer
+$serverId&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Gets a list of all of the IP addresses (public and private) for the  specified server
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$serverId:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The ID of the server to list addresses of</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>The list of public and private IP addresses</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodserverAddressShare" id="serverAddressShare"><!-- --></a>
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverAddressShare</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 161]</span>
+	<span class="method-title">serverAddressShare</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 200]</span>
 </div>
 <br />
 
@@ -601,11 +721,59 @@ $configure = FALSE]&nbsp;
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
-<a name="methodserverCreate" id="serverCreate"><!-- --></a>
+<a name="methodserverBackupList" id="serverBackupList"><!-- --></a>
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">serverCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 198]</span>
+	<span class="method-title">serverBackupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 356]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>array serverBackupList(
+integer
+$serverId&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>List the backup schedule for a specific server
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$serverId:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The ID of the server to list the schedule for</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>Backup schedule details</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodserverCreate" id="serverCreate"><!-- --></a>
+<div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">serverCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 237]</span>
 </div>
 <br />
 
@@ -670,11 +838,59 @@ $sharedIpGroupId = NULL]&nbsp;
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
+<a name="methodserverDelete" id="serverDelete"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">serverDelete</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 269]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean serverDelete(
+integer
+$serverId&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Delete a server, destroying all data on it
+</strong></p>
+<span class="description"><p>Make sure you want to do this before calling this method. Server deletes  also destroy all images created by that server (strange as it may seem).</p></span>
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$serverId:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The ID of the server to delete</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>TRUE if the server has been deleted</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodserverDetails" id="serverDetails"><!-- --></a>
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 228]</span>
+	<span class="method-title">serverDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 286]</span>
 </div>
 <br />
 
@@ -722,7 +938,7 @@ $serverId&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">serverList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 245]</span>
+	<span class="method-title">serverList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 303]</span>
 </div>
 <br />
 
@@ -770,7 +986,7 @@ $detailed = FALSE]&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverReboot</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 271]</span>
+	<span class="method-title">serverReboot</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 329]</span>
 </div>
 <br />
 
@@ -825,7 +1041,7 @@ $hardReboot = FALSE]&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 299]</span>
+	<span class="method-title">sharedIpGroupCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 378]</span>
 </div>
 <br />
 
@@ -880,7 +1096,7 @@ $serverId = NULL]&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 325]</span>
+	<span class="method-title">sharedIpGroupDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 404]</span>
 </div>
 <br />
 
@@ -928,7 +1144,7 @@ $sharedIpGroupId&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 343]</span>
+	<span class="method-title">sharedIpGroupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 422]</span>
 </div>
 <br />
 
@@ -978,7 +1194,7 @@ $detailed = FALSE]&nbsp;
 
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Mon, 17 Aug 2009 15:28:42 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
+		    Documentation generated on Thu, 27 Aug 2009 16:09:05 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
 	      </div>
       </td></tr></table>
     </td>

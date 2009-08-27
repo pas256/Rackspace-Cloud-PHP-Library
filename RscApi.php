@@ -82,11 +82,11 @@ class RscApi {
 	 * You can use this method to create custom images. Once your image has
 	 * been created, you can build new servers with it.
 	 *
-	 * @param integer $serverId The ID of the server to build the image from
 	 * @param string $name The name of the image to create
+	 * @param integer $serverId The ID of the server to build the image from
 	 * @return array Details of the new images (most importantly, it's ID)
 	 */
-	public function imageCreate($serverId, $name) {
+	public function imageCreate($name, $serverId) {
 		$url = "/images";
 
 		$data = array(
@@ -100,6 +100,25 @@ class RscApi {
 		$response = $this->makeApiCall($url, $jsonData);
 		if (isset($response['image'])) {
 			return $response['image'];
+		}
+
+		return NULL;
+	}
+
+	/**
+	 * Gets the details of a specific image
+	 *
+	 * @param integer $imageId The ID of the image to get the details for
+	 * @return array Image details
+	 */
+	public function imageDetails($imageId) {
+		$url = "/images/$imageId";
+
+		$response = $this->makeApiCall($url);
+		if (in_array($this->getLastResponseStatus(), array(200, 203))) {
+			if (isset($response['image'])) {
+				return $response['image'];
+			}
 		}
 
 		return NULL;
@@ -142,6 +161,26 @@ class RscApi {
 		if (in_array($this->getLastResponseStatus(), array(200, 203))
 				&& isset($response['limits'])) {
 			return $response['limits'];
+		}
+
+		return NULL;
+	}
+
+	/**
+	 * Gets a list of all of the IP addresses (public and private) for the
+	 * specified server
+	 *
+	 * @param integer $serverId The ID of the server to list addresses of
+	 * @return array The list of public and private IP addresses
+	 */
+	public function serverAddressList($serverId) {
+		$url = "/servers/$serverId/ips";
+
+		$response = $this->makeApiCall($url);
+		if (in_array($this->getLastResponseStatus(), array(200, 203))) {
+			if (isset($response['addresses'])) {
+				return $response['addresses'];
+			}
 		}
 
 		return NULL;
@@ -216,7 +255,6 @@ class RscApi {
 		}
 
 		return NULL;
-
 	}
 
 	/**
@@ -308,6 +346,27 @@ class RscApi {
 
 		return FALSE;
 	}
+
+	/**
+	 * List the backup schedule for a specific server
+	 *
+	 * @param integer $serverId The ID of the server to list the schedule for
+	 * @return array Backup schedule details
+	 */
+	public function serverBackupList($serverId) {
+		$url = "/servers/$serverId/backup_schedule";
+
+		$response = $this->makeApiCall($url);
+		$status = $this->getLastResponseStatus();
+		if ($status == "200" || $status == "203") {
+			if (isset($response['backupSchedule'])) {
+				return $response['backupSchedule'];
+			}
+		}
+
+		return NULL;
+	}
+
 
 	/**
 	 * Creates a new shared IP group
