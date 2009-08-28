@@ -102,6 +102,7 @@ Source Location: /RscApi.php<br /><br />
 		  		  <li><a href="../RscApi/RscApi.html#methodlimits">limits</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverAddressList">serverAddressList</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverAddressShare">serverAddressShare</a></li>
+		  		  <li><a href="../RscApi/RscApi.html#methodserverAddressUnshare">serverAddressUnshare</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverBackupList">serverBackupList</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverCreate">serverCreate</a></li>
 		  		  <li><a href="../RscApi/RscApi.html#methodserverDelete">serverDelete</a></li>
@@ -133,7 +134,7 @@ Source Location: /RscApi.php<br /><br />
 		<div class="info-box-body">
 			<div class="method-summary">
 				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
-																																																																																																																																																																								<div class="method-definition">
+																																																																																																																																																																																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">RscApi</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#__construct" title="details" class="method-name">__construct</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Creates a new Rackspace Cloud Servers API object to make calls with</td></tr>
@@ -182,6 +183,11 @@ Source Location: /RscApi.php<br /><br />
 											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#serverAddressShare" title="details" class="method-name">serverAddressShare</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Share an IP Address with another server</td></tr>
+				</div>
+																<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#serverAddressUnshare" title="details" class="method-name">serverAddressUnshare</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Removes a shared IP Address from the specified server</td></tr>
 				</div>
 																<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">array</span>&nbsp;&nbsp;</td>
@@ -349,7 +355,7 @@ $detailed = FALSE]&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">getLastResponseMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 442]</span>
+	<span class="method-title">getLastResponseMessage</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 465]</span>
 </div>
 <br />
 
@@ -385,7 +391,7 @@ $detailed = FALSE]&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">getLastResponseStatus</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 486]</span>
+	<span class="method-title">getLastResponseStatus</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 509]</span>
 </div>
 <br />
 
@@ -656,7 +662,7 @@ $serverId&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverAddressShare</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 200]</span>
+	<span class="method-title">serverAddressShare</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 204]</span>
 </div>
 <br />
 
@@ -675,7 +681,7 @@ $configure = FALSE]&nbsp;
 
 	<p align="center" class="short-description"><strong>Share an IP Address with another server
 </strong></p>
-<span class="description"><p>Caution - work in progress</p></span>
+<span class="description"><p>This is a little strange, but the way it works is you pick a public IP  Address from a server in the Shared IP Group. You then pick another  server to share that IP Address with in the same Shared IP Group.</p></span>
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
@@ -683,13 +689,13 @@ $configure = FALSE]&nbsp;
 				<td>
 				<span class="var-name">$serverId:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> (unsure - possibly the server to</span>			</td></tr>
+				<span class="var-description"> The server to share the IP Address with - the          destination, not the source/owner of the address now.</span>			</td></tr>
 					<tr><td class="indent">
 				<span class="var-type">string</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$ipAddress:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> The IP address to share</span>			</td></tr>
+				<span class="var-description"> The public IP address to share</span>			</td></tr>
 					<tr><td class="indent">
 				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
 				<td>
@@ -701,14 +707,69 @@ $configure = FALSE]&nbsp;
 				<td>
 				<span class="var-name">$configure:&nbsp;</span></td>
 				<td>
-							</td></tr>
+				<span class="var-description"> (Optional) Set to TRUE to configure and reboot          the server to accept the new IP Address</span>			</td></tr>
 				</table>
 
 	<br />
 	<strong>API Tags:</strong><br />
 <table border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>TRUE if it worked</td>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>TRUE if the IP Address is now shared with $serverId</td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+		
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodserverAddressUnshare" id="serverAddressUnshare"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">serverAddressUnshare</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 232]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean serverAddressUnshare(
+integer
+$serverId, string
+$ipAddress&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Removes a shared IP Address from the specified server
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">integer</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$serverId:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The server to remove a share the IP Address from</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$ipAddress:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The shared public IP address to remove</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>TRUE if the IP Address is no longer shared</td>
   </tr>
   <tr>
     <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
@@ -722,10 +783,10 @@ $configure = FALSE]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodserverBackupList" id="serverBackupList"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverBackupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 356]</span>
+	<span class="method-title">serverBackupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 379]</span>
 </div>
 <br />
 
@@ -770,10 +831,10 @@ $serverId&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodserverCreate" id="serverCreate"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">serverCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 237]</span>
+	<span class="method-title">serverCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 260]</span>
 </div>
 <br />
 
@@ -839,10 +900,10 @@ $sharedIpGroupId = NULL]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodserverDelete" id="serverDelete"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverDelete</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 269]</span>
+	<span class="method-title">serverDelete</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 292]</span>
 </div>
 <br />
 
@@ -887,10 +948,10 @@ $serverId&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodserverDetails" id="serverDetails"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">serverDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 286]</span>
+	<span class="method-title">serverDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 309]</span>
 </div>
 <br />
 
@@ -935,10 +996,10 @@ $serverId&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodserverList" id="serverList"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">serverList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 303]</span>
+	<span class="method-title">serverList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 326]</span>
 </div>
 <br />
 
@@ -983,10 +1044,10 @@ $detailed = FALSE]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodserverReboot" id="serverReboot"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">serverReboot</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 329]</span>
+	<span class="method-title">serverReboot</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 352]</span>
 </div>
 <br />
 
@@ -1038,10 +1099,10 @@ $hardReboot = FALSE]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsharedIpGroupCreate" id="sharedIpGroupCreate"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 378]</span>
+	<span class="method-title">sharedIpGroupCreate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 401]</span>
 </div>
 <br />
 
@@ -1093,10 +1154,10 @@ $serverId = NULL]&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsharedIpGroupDetails" id="sharedIpGroupDetails"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 404]</span>
+	<span class="method-title">sharedIpGroupDetails</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 427]</span>
 </div>
 <br />
 
@@ -1141,10 +1202,10 @@ $sharedIpGroupId&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsharedIpGroupList" id="sharedIpGroupList"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">sharedIpGroupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 422]</span>
+	<span class="method-title">sharedIpGroupList</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 445]</span>
 </div>
 <br />
 
@@ -1194,7 +1255,7 @@ $detailed = FALSE]&nbsp;
 
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Thu, 27 Aug 2009 16:09:05 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
+		    Documentation generated on Fri, 28 Aug 2009 11:54:38 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
 	      </div>
       </td></tr></table>
     </td>

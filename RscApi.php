@@ -189,31 +189,54 @@ class RscApi {
 	/**
 	 * Share an IP Address with another server
 	 *
-	 * Caution - work in progress
+	 * This is a little strange, but the way it works is you pick a public IP
+	 * Address from a server in the Shared IP Group. You then pick another
+	 * server to share that IP Address with in the same Shared IP Group.
 	 *
-	 * @param integer $serverId (unsure - possibly the server to
-	 * @param string $ipAddress The IP address to share
+	 * @param integer $serverId The server to share the IP Address with - the
+	 * 		destination, not the source/owner of the address now.
+	 * @param string $ipAddress The public IP address to share
 	 * @param integer $sharedIpGroupId The ID of the group to share it with
-	 * @param boolean $configure
-	 * @return boolean TRUE if it worked
+	 * @param boolean $configure (Optional) Set to TRUE to configure and reboot
+	 * 		the server to accept the new IP Address
+	 * @return boolean TRUE if the IP Address is now shared with $serverId
 	 */
 	public function serverAddressShare($serverId, $ipAddress, $sharedIpGroupId,
 			$configure = FALSE) {
-		$url = "/servers/$serverId/ips/public/$ipAddress";
-
 		$data = array(
 			"shareIp" => array(
 				"sharedIpGroupId" => $sharedIpGroupId,
 			),
 		);
 		if ($configure) {
-			$data['shareIp']['configureServer'] = "true";
+			$data['shareIp']['configureServer'] = true;
 		}
 		$jsonData = json_encode($data);
 
-		$response = $this->makeApiCall($url, $jsonData, "put");
+		$url = "/servers/$serverId/ips/public/$ipAddress";
+		$this->makeApiCall($url, $jsonData, "put");
+		if ($this->getLastResponseStatus() == "202") {
+			return TRUE;
+		}
 
-		return TRUE;
+		return FALSE;
+	}
+
+	/**
+	 * Removes a shared IP Address from the specified server
+	 *
+	 * @param integer $serverId The server to remove a share the IP Address from
+	 * @param string $ipAddress The shared public IP address to remove
+	 * @return boolean TRUE if the IP Address is no longer shared
+	 */
+	public function serverAddressUnshare($serverId, $ipAddress) {
+		$url = "/servers/$serverId/ips/public/$ipAddress";
+		$this->makeApiCall($url, NULL, "delete");
+		if ($this->getLastResponseStatus() == "202") {
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	/**
