@@ -338,6 +338,33 @@ class RscApi {
 	}
 
 	/**
+	 * Resize a server - either up or down
+	 *
+	 * Keep in mind that servers are created asynchronously. This means that
+	 * after this call, your server will be resized over time.
+	 *
+	 * @param integer $serverId The ID of the server to get the details for
+	 * @param integer $flavorId The ID of the hardware config (flavor)
+	 * @return boolean TRUE if the reboot is underway
+	 */
+	public function serverResize($serverId, $flavorId) {
+		$data = array(
+			"resize" => array(
+				"flavorId" => $flavorId,
+			),
+		);
+		$jsonData = json_encode($data);
+
+		$url = "/servers/$serverId/action";
+		$response = $this->makeApiCall($url, $jsonData);
+		if ($this->getLastResponseStatus() == "202") {
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
 	 * Reboot a server
 	 *
 	 * The default is to do a SOFT reboot, meaning a graceful shutdown and
