@@ -25,6 +25,12 @@
  * @package RscApi
  */
 class RscApi {
+	/**
+	 * Timeout in seconds for an API call to respond
+	 * @var integer
+	 */
+	private static $TIMEOUT = 10;
+
 	private $serverUrl;
 	private $authToken;
 	private $authUser;
@@ -511,7 +517,7 @@ class RscApi {
 			return $map[$status];
 		}
 
-		return NULL;
+		return "UNKNOWN - Probably a timeout on the connection";
 	}
 
 	/**
@@ -573,7 +579,7 @@ class RscApi {
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array(&$this, 'parseHeader'));
 		curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
-		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_TIMEOUT, RscApi::$TIMEOUT);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
 		$jsonResponse = curl_exec($ch);
