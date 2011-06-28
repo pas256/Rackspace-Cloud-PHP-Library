@@ -29,9 +29,9 @@ class RscApi {
 	 * Timeout in seconds for an API call to respond
 	 * @var integer
 	 */
-	private static $TIMEOUT = 10;
+	private static $TIMEOUT = 20;
 
-	private $serverUrl;
+	private $apiEndpoint;
 	private $authToken;
 	private $authUser;
 	private $authKey;
@@ -53,8 +53,168 @@ class RscApi {
 		$this->authUser = $user;
 		$this->authKey = $key;
 
-		$this->serverUrl = NULL;
+		$this->apiEndpoint = array();
 		$this->authToken = NULL;
+	}
+
+	/**
+	 * Get a list of load balancers
+	 *
+	 * TODO Add doc desc
+	 *
+	 * @return array A list of flavor details comprising of ID, name, RAM and
+	 * 		disk information
+	 */
+	public function loadBalancerList() {
+		$url = "/loadbalancers";
+
+		$response = $this->makeLbApiCall($url);
+		if (isset($response['loadBalancers'])) {
+			return $response['loadBalancers'];
+		}
+
+		return NULL;
+	}
+
+	/**
+	 * Gets the details of a specific load balancer
+	 *
+	 * @param integer $lbId The ID of the load balancer to get the details for
+	 * @return array Load balancer details
+	 */
+	public function loadBalancerDetails($lbId) {
+		$url = "/loadbalancers/$lbId";
+
+		$response = $this->makeLbApiCall($url);
+		if ($this->getLastResponseStatus() == 200) {
+			return $response;
+		}
+
+		return NULL;
+	}
+
+	public function loadBalancerCreate($name, $port, $protocol, $nodeAddress, $nodePort, $nodeCondition, $virtualIpId = NULL) {
+		$url = "/loadbalancers";
+
+		$vip = array();
+		if ($virtualIpId == NULL) {
+			$vip[] = array(
+				"type" => "PUBLIC",
+			);
+		} elseif ($virtualIpId == "SERVICENET") {
+			$vip[] = array(
+				"type" => "SERVICENET",
+			);
+		} else {
+			$vip[] = array(
+				"id" => $virtualIpId,
+			);
+		}
+
+		$nodes = array();
+		$nodes[] = array(
+			"address" => $nodeAddress,
+			"port" => $nodePort,
+			"condition" => $nodeCondition,
+		);
+
+		$data = array(
+			"name" => $name,
+			"port" => $port,
+			"protocol" => $protocol,
+			"virtualIps" => $vip,
+			"nodes" => $nodes,
+		);
+		$jsonData = json_encode($data);
+		//var_dump($jsonData);
+
+		$response = $this->makeLbApiCall($url, $jsonData);
+		if (isset($response['loadBalancer'])) {
+			return $response['loadBalancer'];
+		}
+
+		return NULL;
+	}
+
+	public function loadBalancerDelete($lbId) {
+		$url = "/loadbalancers/$lbId";
+
+		$response = $this->makeLbApiCall($url, null, "delete");
+		if ($this->getLastResponseStatus() == 200) {
+			var_dump($response);
+			return $response;
+		}
+
+		return NULL;
+	}
+
+	public function loadBalancerUpdate($lbId, $name = null, $algorithm = null, $protocol = null, $port = null) {
+		$url = "/loadbalancers/$lbId";
+
+		$data = array();
+		if ($name != null) {
+			$data["name"] = $name;
+		}
+		if ($algorithm != null) {
+			$data["algorithm"] = $algorithm;
+		}
+		if ($protocol != null) {
+			$data["protocol"] = $protocol;
+		}
+		if ($port != null) {
+			$data["port"] = $port;
+		}
+		$jsonData = json_encode($data);
+
+		$response = $this->makeLbApiCall($url, $jsonData, "put");
+		if ($this->getLastResponseStatus() == 200) {
+			return $response;
+		}
+
+		return NULL;
+	}
+
+	/**
+	 * Adds a new node to a specific load balancer
+	 *
+	 */
+	public function loadBalancerAddNode($loadBalancerID, $nodeAddress, $nodePort, $nodeCondition) {
+		$url = "/loadbalancers/$loadBalancerID/nodes";
+
+		$nodes = array();
+		$nodes[] = array(
+                        "address" => $nodeAddress,
+                        "port" => $nodePort,
+                        "condition" => $nodeCondition,
+		);
+
+		$data = array(
+                        "nodes" => $nodes,
+		);
+		$jsonData = json_encode($data);
+		$response = $this->makeLbApiCall($url, $jsonData, "POST");
+		if (isset($response['nodes'])) {
+			return $response['nodes'];
+		}
+
+		return NULL;
+	}
+
+
+	/**
+	 * Removes a node from a specific load balancer
+	 *
+	 */
+	public function loadBalancerRemoveNode($loadBalancerID, $nodeID) {
+		$url = "/loadbalancers/$loadBalancerID/nodes/$nodeID";
+
+		$response = $this->makeLbApiCall($url, null, "DELETE");
+
+		if ($this->getLastResponseStatus() == 200) {
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	/**
@@ -74,7 +234,7 @@ class RscApi {
 			$url .= "/detail";
 		}
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		if (isset($response['flavors'])) {
 			return $response['flavors'];
 		}
@@ -99,11 +259,11 @@ class RscApi {
 			"image" => array(
 				"serverId" => $serverId,
 				"name" => $name,
-			),
+		),
 		);
 		$jsonData = json_encode($data);
 
-		$response = $this->makeApiCall($url, $jsonData);
+		$response = $this->makeServersApiCall($url, $jsonData);
 		if (isset($response['image'])) {
 			return $response['image'];
 		}
@@ -120,7 +280,7 @@ class RscApi {
 	public function imageDetails($imageId) {
 		$url = "/images/$imageId";
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		if (in_array($this->getLastResponseStatus(), array(200, 203))) {
 			if (isset($response['image'])) {
 				return $response['image'];
@@ -146,7 +306,7 @@ class RscApi {
 			$url .= "/detail";
 		}
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		if (isset($response['images'])) {
 			return $response['images'];
 		}
@@ -163,9 +323,10 @@ class RscApi {
 	 * @return array Absolute and rate limits
 	 */
 	public function limits() {
-		$response = $this->makeApiCall("/limits");
+		$response = $this->makeServersApiCall("/limits");
+
 		if (in_array($this->getLastResponseStatus(), array(200, 203))
-				&& isset($response['limits'])) {
+		&& isset($response['limits'])) {
 			return $response['limits'];
 		}
 
@@ -182,7 +343,7 @@ class RscApi {
 	public function serverAddressList($serverId) {
 		$url = "/servers/$serverId/ips";
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		if (in_array($this->getLastResponseStatus(), array(200, 203))) {
 			if (isset($response['addresses'])) {
 				return $response['addresses'];
@@ -208,11 +369,11 @@ class RscApi {
 	 * @return boolean TRUE if the IP Address is now shared with $serverId
 	 */
 	public function serverAddressShare($serverId, $ipAddress, $sharedIpGroupId,
-			$configure = FALSE) {
+	$configure = FALSE) {
 		$data = array(
 			"shareIp" => array(
 				"sharedIpGroupId" => $sharedIpGroupId,
-			),
+		),
 		);
 		if ($configure) {
 			$data['shareIp']['configureServer'] = true;
@@ -220,7 +381,7 @@ class RscApi {
 		$jsonData = json_encode($data);
 
 		$url = "/servers/$serverId/ips/public/$ipAddress";
-		$this->makeApiCall($url, $jsonData, "put");
+		$this->makeServersApiCall($url, $jsonData, "put");
 		if ($this->getLastResponseStatus() == "202") {
 			return TRUE;
 		}
@@ -237,7 +398,7 @@ class RscApi {
 	 */
 	public function serverAddressUnshare($serverId, $ipAddress) {
 		$url = "/servers/$serverId/ips/public/$ipAddress";
-		$this->makeApiCall($url, NULL, "delete");
+		$this->makeServersApiCall($url, NULL, "delete");
 		if ($this->getLastResponseStatus() == "202") {
 			return TRUE;
 		}
@@ -264,13 +425,13 @@ class RscApi {
 	 * @return array New server details including the generated root password
 	 */
 	public function serverCreate($name, $imageId, $flavorId,
-			$sharedIpGroupId = NULL) {
+	$sharedIpGroupId = NULL) {
 		$data = array(
 			"server" => array(
 				"name" => $name,
 				"imageId" => $imageId,
 				"flavorId" => $flavorId,
-			),
+		),
 		);
 		if ($sharedIpGroupId) {
 			$data['server']['sharedIpGroupId'] = $sharedIpGroupId;
@@ -278,7 +439,7 @@ class RscApi {
 		$jsonData = json_encode($data);
 
 		$url = "/servers";
-		$response = $this->makeApiCall($url, $jsonData);
+		$response = $this->makeServersApiCall($url, $jsonData);
 		if (isset($response['server'])) {
 			return $response['server'];
 		}
@@ -298,7 +459,7 @@ class RscApi {
 	public function serverDelete($serverId) {
 		$url = "/servers/$serverId";
 
-		$this->makeApiCall($url, NULL, "delete");
+		$this->makeServersApiCall($url, NULL, "delete");
 		if ($this->getLastResponseStatus() == "202") {
 			return TRUE;
 		}
@@ -315,7 +476,7 @@ class RscApi {
 	public function serverDetails($serverId) {
 		$url = "/servers/$serverId";
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		if (isset($response['server'])) {
 			return $response['server'];
 		}
@@ -335,7 +496,7 @@ class RscApi {
 			$url .= "/detail";
 		}
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		if (isset($response['servers'])) {
 			return $response['servers'];
 		}
@@ -357,12 +518,12 @@ class RscApi {
 		$data = array(
 			"resize" => array(
 				"flavorId" => $flavorId,
-			),
+		),
 		);
 		$jsonData = json_encode($data);
 
 		$url = "/servers/$serverId/action";
-		$response = $this->makeApiCall($url, $jsonData);
+		$response = $this->makeServersApiCall($url, $jsonData);
 		if ($this->getLastResponseStatus() == "202") {
 			return TRUE;
 		}
@@ -395,7 +556,7 @@ class RscApi {
 		}
 		$jsonData = json_encode($data);
 
-		$this->makeApiCall($url, $jsonData);
+		$this->makeServersApiCall($url, $jsonData);
 		if ($this->getLastResponseStatus() == "202") {
 			return TRUE;
 		}
@@ -412,7 +573,7 @@ class RscApi {
 	public function serverBackupList($serverId) {
 		$url = "/servers/$serverId/backup_schedule";
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		$status = $this->getLastResponseStatus();
 		if ($status == "200" || $status == "203") {
 			if (isset($response['backupSchedule'])) {
@@ -435,7 +596,7 @@ class RscApi {
 		$data = array(
 			"sharedIpGroup" => array(
 				"name" => $name,
-			),
+		),
 		);
 		if ($serverId) {
 			$data['sharedIpGroup']['server'] = $serverId;
@@ -443,7 +604,7 @@ class RscApi {
 		$jsonData = json_encode($data);
 
 		$url = "/shared_ip_groups";
-		$response = $this->makeApiCall($url, $jsonData);
+		$response = $this->makeServersApiCall($url, $jsonData);
 		if (isset($response['sharedIpGroup'])) {
 			return $response['sharedIpGroup'];
 		}
@@ -460,7 +621,7 @@ class RscApi {
 	public function sharedIpGroupDetails($sharedIpGroupId) {
 		$url = "/shared_ip_groups/$sharedIpGroupId";
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		if (isset($response['sharedIpGroup'])) {
 			return $response['sharedIpGroup'];
 		}
@@ -481,7 +642,7 @@ class RscApi {
 			$url .= "/detail";
 		}
 
-		$response = $this->makeApiCall($url);
+		$response = $this->makeServersApiCall($url);
 		if (isset($response['sharedIpGroups'])) {
 			return $response['sharedIpGroups'];
 		}
@@ -544,14 +705,38 @@ class RscApi {
 	}
 
 	/**
-	 * Makes a call to the API
+	 * Makes a call to the Servers API
+	 *
+	 * @param string $url The server-specific relative URL to call (example: "/server")
+	 * @param string $postData (Optional) The JSON string to send
+	 * @param string $method (Optional) The HTTP method to use
+	 * @return array The parsed response, or NULL if there was an error
+	 */
+	private function makeServersApiCall($url, $postData = NULL, $method = NULL) {
+		return $this->makeApiCall("server", $url, $postData, $method);
+	}
+
+	/**
+	 * Makes a call to the Load Balancer API
+	 *
+	 * @param string $url The load-balancer-specific relative URL to call (example: "/loadbalancers")
+	 * @param string $postData (Optional) The JSON string to send
+	 * @param string $method (Optional) The HTTP method to use
+	 * @return array The parsed response, or NULL if there was an error
+	 */
+	private function makeLbApiCall($url, $postData = NULL, $method = NULL) {
+		return $this->makeApiCall("load-balancer", $url, $postData, $method);
+	}
+
+	/**
+	 * Makes a call to an API
 	 *
 	 * @param string $url The relative URL to call (example: "/server")
 	 * @param string $postData (Optional) The JSON string to send
 	 * @param string $method (Optional) The HTTP method to use
 	 * @return array The parsed response, or NULL if there was an error
 	 */
-	private function makeApiCall($url, $postData = NULL, $method = NULL) {
+	private function makeApiCall($apiEndpointType, $url, $postData = NULL, $method = NULL) {
 		// Authenticate if necessary
 		if (!$this->isAuthenticated()) {
 			if (!$this->authenticate()) {
@@ -561,7 +746,8 @@ class RscApi {
 
 		$this->lastResponseStatus = NULL;
 
-		$jsonUrl = $this->serverUrl . $url . ".json";
+		$jsonUrl = $this->apiEndpoint[$apiEndpointType] . $url . ".json";;
+
 		$httpHeaders = array(
 			"X-Auth-Token: {$this->authToken}",
 		);
@@ -585,6 +771,7 @@ class RscApi {
 		$jsonResponse = curl_exec($ch);
 		curl_close($ch);
 
+		// var_dump($jsonResponse);
 		return json_decode($jsonResponse, TRUE);
 	}
 
@@ -598,11 +785,11 @@ class RscApi {
 	 */
 	private function parseHeader($ch, $header) {
 		preg_match("/^HTTP\/1\.[01] (\d{3}) (.*)/", $header, $matches);
-        if (isset($matches[1])) {
-            $this->lastResponseStatus = $matches[1];
-        }
+		if (isset($matches[1])) {
+			$this->lastResponseStatus = $matches[1];
+		}
 
-        return strlen($header);
+		return strlen($header);
 	}
 
 	/**
@@ -640,8 +827,11 @@ class RscApi {
 			$this->lastResponseStatus = $matches[1];
 			if ($this->lastResponseStatus == "204") {
 				preg_match("/X-Server-Management-Url: (.*)/", $response,
-						$matches);
-				$this->serverUrl = trim($matches[1]);
+				$matches);
+				$this->apiEndpoint["server"] = trim($matches[1]);
+
+				// TODO Replace this with parsing the correct one once the Load Balancer API goes public
+				$this->apiEndpoint["load-balancer"] = "https://ord.loadbalancers.api.rackspacecloud.com/v1.0/425464";
 
 				preg_match("/X-Auth-Token: (.*)/", $response, $matches);
 				$this->authToken = trim($matches[1]);
