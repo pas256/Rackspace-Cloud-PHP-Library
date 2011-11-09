@@ -799,7 +799,7 @@ class RscApi {
 	 * 		be done
 	 */
 	private function isAuthenticated() {
-		return ($this->serverUrl && $this->authToken);
+		return ($this->authToken);
 	}
 
 	/**
