@@ -272,6 +272,24 @@ class RscApi {
 	}
 
 	/**
+	 * Delete a image
+	 *
+	 * @param integer $imageId The ID of the image to delete
+	 * @return boolean TRUE if the image has been deleted
+	 */
+	public function imageDelete($imageId) {
+		$url = "/images/$imageId";
+
+		$this->makeServersApiCall($url, NULL, "delete");
+
+		if ($this->getLastResponseStatus() == "204") {
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
 	 * Gets the details of a specific image
 	 *
 	 * @param integer $imageId The ID of the image to get the details for
